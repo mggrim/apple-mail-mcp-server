@@ -38,13 +38,18 @@ tell application "Mail"
   // Determine which mailbox to search
   if (mailbox && account) {
     script += `set targetMailbox to mailbox "${mailbox}" of account "${account}"\n`;
+    script += `set allMessages to every message of targetMailbox\n`;
   } else if (mailbox) {
     script += `set targetMailbox to mailbox "${mailbox}"\n`;
+    script += `set allMessages to every message of targetMailbox\n`;
+  } else if (account) {
+    // Search all messages across all mailboxes in the specified account
+    script += `set allMessages to every message of account "${account}"\n`;
   } else {
+    // Default to inbox if neither mailbox nor account specified
     script += `set targetMailbox to inbox\n`;
+    script += `set allMessages to every message of targetMailbox\n`;
   }
-  
-  script += `set allMessages to every message of targetMailbox\n`;
   script += `repeat with aMessage in allMessages\n`;
   
   // Build filter conditions
